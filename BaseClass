@@ -1,0 +1,42 @@
+package scripts;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Reporter;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.xml.XmlTest;
+
+public class BaseClass implements AutomationConstant {
+
+	public WebDriver driver;
+	public DesiredCapabilities browserType;
+	@BeforeMethod
+	public void preCondition(XmlTest xmlTest) throws MalformedURLException {
+		String strURL = xmlTest.getParameter("url");
+		URL url = new URL(strURL);
+		String browser = xmlTest.getParameter("browser");
+		Reporter.log(browser, true);
+		if (browser.equals("chrome")) {
+			browserType = DesiredCapabilities.chrome();
+		} else {
+			browserType = DesiredCapabilities.firefox();
+		}
+		driver = new RemoteWebDriver(url,browserType);
+		driver.get("http://localhost/login.do");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+
+	@AfterMethod
+	public void postCondition() {
+		driver.close();
+	}
+
+}
