@@ -1,0 +1,33 @@
+package generics;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.NumberToTextConverter;
+
+public class ExcelNumber {
+
+	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
+		
+		FileInputStream fis = new FileInputStream("./testdata/input.xlsx");
+		Workbook wb = WorkbookFactory.create(fis);
+		Sheet s = wb.getSheet("dummy");
+		Row row = s.getRow(0);
+		Cell cell = row.getCell(0);
+		if (cell.getCellType() ==Cell.CELL_TYPE_NUMERIC){
+			String str = NumberToTextConverter.toText(cell.getNumericCellValue());
+			System.out.println(str);
+		}
+			
+		
+	}
+	
+}
